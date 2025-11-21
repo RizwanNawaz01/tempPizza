@@ -5,11 +5,12 @@
 .nitro
 .cache
 dist
+.zip
 
 # Node dependencies
 node_modules
 
-# Logs
+# Logte
 logs
 *.log
 
