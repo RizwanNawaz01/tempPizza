@@ -1,0 +1,168 @@
+generator client {
+  provider = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-1.0.x"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          Int      @id @default(autoincrement())
+  email       String   @unique
+  password    String
+  firstName   String?
+  lastName    String?
+  phoneNumber String?
+  street      String?
+  city        String?
+  postalCode  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  userType    String   @default("customer")
+  Order       Order[]
+
+  @@map("users")
+}
+
+model Category {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Product   Product[]
+
+  @@map("categories")
+}
+
+model Product {
+  id            Int      @id @default(autoincrement())
+  name          String
+  description   String?
+  priceDelivery Float    @default(0)
+  pricePickup   Float    @default(0)
+  categoryId    Int
+  image         String?
+  subMenu       Json?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  isHighlighted Boolean  @default(false)
+  category      Category @relation(fields: [categoryId], references: [id])
+
+  @@index([categoryId], map: "products_categoryId_fkey")
+  @@map("products")
+}
+
+model SubMenu {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  price     Float    @default(0)
+
+  @@map("submenus")
+}
+
+model Order {
+  id           Int      @id @default(autoincrement())
+  userId       Int?
+  items        Json
+  totalPrice   Float
+  status       String   @default("pending")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  customerInfo Json?
+  deliveryType String   @default("lieferung")
+  orderCode    String
+  eta          String?
+  user         User?    @relation(fields: [userId], references: [id])
+
+  @@index([userId], map: "orders_userId_fkey")
+  @@map("orders")
+}
+
+model Slider {
+  id            Int      @id @default(autoincrement())
+  title         String
+  subtitle      String
+  image         String
+  gradident     String
+  smallTitle    String
+  smallSubtitle String
+  link          String?
+  order         Int      @default(0)
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  linkName      String?
+
+  @@map("sliders")
+}
+
+model City {
+  id          Int          @id @default(autoincrement())
+  name        String       @unique
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  postalcodes PostalCode[] @relation("citytopostalcode")
+
+  @@map("cities")
+}
+
+model PostalCode {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  cities    City[]   @relation("citytopostalcode")
+
+  @@map("postalcodes")
+}
+
+model SiteSettings {
+  id              Int      @id @default(1)
+  address         String?
+  metaTitle       String?
+  metaDescription String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  contact         String?
+  description     String?
+  favicon         String?
+  logo            String?
+  minOrder        Float?
+  openingHours    Json?
+  services        Json?
+  siteName        String?
+  title           String?
+  currency        String?
+  order_outside_time  String?
+
+  @@map("storesettings")
+}
+
+model Page {
+  id              Int      @id @default(autoincrement())
+  title           String
+  slug            String   @unique
+  content         String   @db.Text
+  metaTitle       String?
+  metaDescription String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("pages")
+}
+
+model about {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  services    Json
+  address     String
+  contact     String
+  image       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime
+}

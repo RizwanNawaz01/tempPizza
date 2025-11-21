@@ -1,163 +1,79 @@
 <template>
-<footer class="bg-gray-100 py-8">
+<footer class="bg-gray-100 py-8" v-if="siteSettings">
   <div class="max-w-6xl mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+    <!-- Quick Links (static) -->
     <div>
-      <h3 class="text-xl font-bold text-gray-800 mb-4">
-        
-          Quick Links
-        
-      </h3>
+      <h3 class="text-xl font-bold text-gray-800 mb-4">{{t('Quick Links')}}</h3>
+      <ul class="space-y-2">
+        <li v-for="service in siteSettings.services"> <a :href="service.description" class="text-gray-600 hover:text-primary">{{t(service.name)}}</a></li>
+      </ul>
+    </div>
+
+    <!-- Contact Info -->
+    <div>
+      <h3 class="text-xl font-bold text-gray-800 mb-4">{{t('Our contact details')}}</h3>
       <ul class="space-y-2">
         <li>
-          <a href="#home" class="text-gray-600 hover:text-primary">
-            
-              Home
-            
+          <a :href="`tel:${siteSettings.contact}`" class="text-gray-600 hover:text-primary">
+            {{ t(siteSettings.contact) }}
           </a>
         </li>
         <li>
-          <a href="#highlights" class="text-gray-600 hover:text-primary">
-            
-              Highlights
-            
+          <a :href="`mailto:${siteSettings.contact}`" class="text-gray-600 hover:text-primary">
+            {{ t(siteSettings.contact) }}
           </a>
         </li>
         <li>
-          <a href="#menu" class="text-gray-600 hover:text-primary">
-            
-              Menu
-            
-          </a>
-        </li>
-        <li>
-          <a href="#about" class="text-gray-600 hover:text-primary">
-            
-              About
-            
-          </a>
+          <span class="text-gray-600">{{ t(siteSettings.address) }}</span>
         </li>
       </ul>
     </div>
-    <div>
-      <h3 class="text-xl font-bold text-gray-800 mb-4">
-        
-          Our contact details
-        
-      </h3>
-      <ul class="space-y-2">
-        <li>
-          <a href="tel:+41 62 965 05 05" class="text-gray-600 hover:text-primary">
-            <i class="fas fa-phone mr-2"></i>
-            
-              062 965 05 05
-            
-          </a>
-        </li>
-        <li>
-          <a href="mailto:coban.cetin@hotmail.com" class="text-gray-600 hover:text-primary">
-            <i class="fas fa-envelope mr-2"></i>
-            
-              info@pizzaoregano.ch
-            
-          </a>
-        </li>
-        <li>
-          <a href="#" class="text-gray-600 hover:text-primary">
-            <i class="fas fa-map mr-2"></i>
-            
-              Hauptstrasse 15, , Rohrbach 4938 Bern
-            
-          </a>
-        </li>
-      </ul>
-    </div>
-    <div>
-      <h3 class="text-xl font-bold text-gray-800 mb-4">
-        
-          Opening hours
-        
-      </h3>
-      <ul class="space-y-1 text-gray-600 text-sm">
-        <li>
-          <strong>
-            
-              Monday:
-            
-          </strong>
-          
-             Closed
-          
-        </li>
-        <li>
-          <strong>
-            
-              Tue–Thurs:
-            
-          </strong>
-          
-             11:30 a.m.–1:30 p.m. / 5:00 p.m.–10:00 p.m
-          
-        </li>
-        <li>
-          <strong>
-            
-              Friday:
-            
-          </strong>
-          
-             11:30–13:30 / 17:00–23:00
-          
-        </li>
-        <li>
-          <strong>
-            
-              Saturday:
-            
-          </strong>
-          
-             11:30–14:00 / 16:00–23:00
-          
-        </li>
-        <li>
-          <strong>
-            
-              Sunday:
-            
-          </strong>
-          
-             11:30 a.m. - 2 p.m. / 4 p.m. - 10 p.m
-          
-        </li>
-      </ul>
-    </div>
+<!-- Opening Hours -->
+<div>
+  <h3 class="text-xl font-bold text-gray-800 mb-4">{{ t('Opening hours') }}</h3>
+  <ul class="space-y-1 text-gray-600 text-sm">
+    <li v-for="day in siteSettings.openingHours" :key="day.day">
+      <strong class="mr-2">{{ t(day.day) }}:</strong>
+
+      <!-- Closed -->
+      <span v-if="day.closed" class="text-red-500">{{ t('Closed') }}</span>
+
+      <!-- 1 or 2 Shifts -->
+      <template v-else>
+        <!-- Single shift (old structure) -->
+        <span v-if="!day.shifts">{{ day.open }} - {{ day.close }}</span>
+
+        <!-- New structure with shifts -->
+        <template v-else>
+          <span>
+            {{ day.shifts[0].open }} - {{ day.shifts[0].close }}
+          </span>
+          <span v-if="day.doubleShift && day.shifts[1]" class="ml-1">
+            , {{ day.shifts[1].open }} - {{ day.shifts[1].close }}
+          </span>
+        </template>
+      </template>
+    </li>
+  </ul>
+</div>
+
   </div>
+
   <div class="mt-8 border-t border-gray-200 pt-4 flex flex-col md:flex-row justify-between items-center max-w-6xl mx-auto px-4">
-    <p class="text-gray-600">
-      
-        © 2025 Pizza Oregano. All rights reserved.
-      
-    </p>
+    <p class="text-gray-600">© {{ new Date().getFullYear() }} {{ t(siteSettings.siteName) }}. {{t('All rights reserved')}}.</p>
     <div class="flex space-x-4">
-      <a href="#" class="text-gray-600 hover:text-primary">
-        
-          Privacy Policy
-        
-      </a>
-      <a href="#" class="text-gray-600 hover:text-primary">
-        
-          Terms of Service
-        
-      </a>
-      <a href="#" class="text-gray-600 hover:text-primary">
-        
-          Cookie Policy
-        
-      </a>
+      <NuxtLink to="/privacy_policy" class="text-gray-600 hover:text-primary">{{t('Privacy Policy')}}</NuxtLink>
+      <NuxtLink to="/terms" class="text-gray-600 hover:text-primary">{{t('Terms of Service')}}</NuxtLink> 
     </div>
   </div>
 </footer>
-    
 </template>
 
 <script setup>
+import { useSiteSettings } from '~/composables/useSiteSettings'
+const { siteSettings } = useSiteSettings()
+const storeLanguage = useLanguageStore()
+ 
+ const t = (key) => storeLanguage.t(key)
+
 </script>

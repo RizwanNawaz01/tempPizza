@@ -3,10 +3,10 @@
   <div class="app-container">
     <div class="mx-auto max-w-7xl">
       <h3 class="text-center text-base sm:text-lg font-semibold text-secondary">
-        Customer reviews        
+        {{t('Customer reviews')}}        
       </h3>
       <h1 class="text-center text-2xl sm:text-3xl md:text-4xl font-bold text-primary uppercase mt-1 mb-8">
-        What our guests say        
+        {{t('What our guests say')}}        
       </h1>
          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <article
@@ -47,24 +47,29 @@
 </template>
 
 <script setup>
+
+const storeLanguage = useLanguageStore()
+ 
+ const t = (key) => storeLanguage.t(key)
+
 const reviews = [
   {
-    name: 'Gabi Shär',
+    name: t('Gabi Shär'),
     image: '/images/reviews/pic-2.png',
     rating: 5,
-    text: 'Very, very friendly service, excellent food, everything freshly prepared. The kitchen was impressive the second time around, too!'
+    text: t('Very, very friendly service, excellent food, everything freshly prepared. The kitchen was impressive the second time around, too!')
   },
   {
-    name: 'Kevin Patrick Zollinger',
+    name:  t('Kevin Patrick Zollinger'),
     image: '/images/reviews/pic-3.png',
     rating: 5,
-    text: 'Best snack bar in the region! Always recommended and great quality!'
+    text: t('Best snack bar in the region! Always recommended and great quality!')
   },
   {
-    name: 'Nadya Wolflisberg',
+    name:  t('Nadya Wolflisberg'),
     image: '/images/reviews/pic-2.png',
     rating: 5,
-    text: 'Despite a large order, the delivery was on time and correct. Fresh, good, and highly recommended.'
+    text: t('Despite a large order, the delivery was on time and correct. Fresh, good, and highly recommended.')
   }, 
 ]
 </script>

@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `submenus` ADD COLUMN `price` DOUBLE NOT NULL DEFAULT 0;
