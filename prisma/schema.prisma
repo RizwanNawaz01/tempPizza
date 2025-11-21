@@ -1,10 +1,9 @@
 generator client {
   provider = "prisma-client-js"
-  binaryTargets = ["native", "debian-openssl-1.0.x"]
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -50,7 +49,7 @@ model Product {
   isHighlighted Boolean  @default(false)
   category      Category @relation(fields: [categoryId], references: [id])
 
-  @@index([categoryId], map: "products_categoryId_fkey")
+  @@index([categoryId])
   @@map("products")
 }
 
@@ -78,7 +77,7 @@ model Order {
   eta          String?
   user         User?    @relation(fields: [userId], references: [id])
 
-  @@index([userId], map: "orders_userId_fkey")
+  @@index([userId])
   @@map("orders")
 }
 
@@ -121,23 +120,23 @@ model PostalCode {
 }
 
 model SiteSettings {
-  id              Int      @id @default(1)
-  address         String?
-  metaTitle       String?
-  metaDescription String?
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  contact         String?
-  description     String?
-  favicon         String?
-  logo            String?
-  minOrder        Float?
-  openingHours    Json?
-  services        Json?
-  siteName        String?
-  title           String?
-  currency        String?
-  order_outside_time  String?
+  id                 Int      @id @default(1)
+  address            String?
+  metaTitle          String?
+  metaDescription    String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  contact            String?
+  description        String?
+  favicon            String?
+  logo               String?
+  minOrder           Float?
+  openingHours       Json?
+  services           Json?
+  siteName           String?
+  title              String?
+  currency           String?
+  order_outside_time String?
 
   @@map("storesettings")
 }
@@ -146,7 +145,7 @@ model Page {
   id              Int      @id @default(autoincrement())
   title           String
   slug            String   @unique
-  content         String   @db.Text
+  content         String
   metaTitle       String?
   metaDescription String?
   createdAt       DateTime @default(now())
@@ -164,5 +163,7 @@ model about {
   contact     String
   image       String?
   createdAt   DateTime @default(now())
-  updatedAt   DateTime
+  updatedAt   DateTime @updatedAt
+
+  @@map("about")
 }
